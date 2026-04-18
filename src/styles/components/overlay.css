@@ -1,0 +1,33 @@
+.overlay-host {
+  position: relative;
+  display: inline-block;
+}
+
+.overlay-host.overlay-host--inline {
+  display: inline-block;
+}
+
+.overlay-host.overlay-host--block {
+  display: block;
+}
+
+/*
+.overlay-host > ui-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--ui-overlay-background-color, rgba(128, 128, 128, 0.35));
+  border-radius: inherit;
+  pointer-events: auto;
+  z-index: 1;
+
+  display: grid;
+  place-items: center;
+
+  opacity: 0;
+  transition: opacity var(--ui-overlay-duration, 500ms) ease-in-out;
+
+  &.is-visible {
+    opacity: 1;
+  }
+}
+*/

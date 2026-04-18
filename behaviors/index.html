@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/js/components/site-nav.js"></script>
+    <script type="module" src="/src/js/components/site-footer.js"></script>
+    <script type="module" src="/src/js/app-init.js"></script>
+    <script type="module" src="/src/js/behaviors/highlight.js"></script>
+    <script type="module" src="/src/js/behaviors/tooltip.js"></script>
+    <script type="module" src="/src/js/behaviors/click-outside.js"></script>
+    <script type="module" src="/src/js/behaviors/click-toggle.js"></script>
+    <script type="module" src="/src/js/behaviors/long-press.js"></script>
+    <script type="module" src="/src/js/behaviors/popup.js"></script>
+    <script type="module" src="/src/js/components/site-editable-popup-text.js"></script>
+    <script type="module" src="/src/js/behaviors/context-menu.js"></script>
+  </head>
+  <body>
+    <site-nav></site-nav>
+    <h1>Behaviors</h1>
+    <style>
+      #container-to-highlight {
+        width: 200px;
+        height: 100px;
+        background-color: lightgray;
+        margin-top: 1em;
+      }
+
+      #click-toggle-target {
+        width: 200px;
+        height: 100px;
+        background-color: lightblue;
+        margin-top: 1em;
+
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      #click-toggle-target[active] {
+        background-color: lightcoral;
+      }
+
+      #container-to-popup {
+        width: 200px;
+        height: 100px;
+        background-color: lightgreen;
+        margin-top: 1em;
+      }
+      
+      .editable-popup {
+        border: 1px solid #ccc;
+        background: white;
+        padding: 1em;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        z-index: 1000;
+        display: inline-flex;
+        flex-direction: row;
+        gap: 0.5em;
+      }
+    </style>
+    <div style="margin-bottom: 1em">
+      <site-editable-popup-text id="editable-popup-element" text="This is the initial text. Click to edit."></site-editable-popup-text>
+    </div>
+    <div>
+        This is the thing <em>we</em> need to highlight: <span id="container-to-tooltip">This</span>.
+        <br/>
+        But we'll test click-outside with <span id="container-to-click-outside-it">This one to click outside</span>
+      
+    </div>
+    <div>
+      This is the div with a button to trigger a popup: <button type="button" id="popup-trigger">Open Popup</button>
+    </div>
+    <div id="container-to-highlight">
+      Highlight me
+    </div>
+    <div id="click-toggle-target">
+      My state will be toggled when something controls me. Click the button below to toggle my state.
+    </div>
+    <button type="button" class="button button--primary" id="click-toggle-controller" data-toggle-target="click-toggle-target">Toggle class
+    </button>
+    
+    <site-footer></site-footer>
+    <script type="module">
+      import { applyClickOutside } from '../src/js/behaviors/click-outside.js'
+      import { applyClickToggle } from '../src/js/behaviors/click-toggle.js'      
+      import { applyContextMenu } from '../src/js/behaviors/context-menu.js'
+      import { applyHighlight } from '../src/js/behaviors/highlight.js'
+      import { applyLongPress } from '../src/js/behaviors/long-press.js'      
+      import { applyPopup } from '../src/js/behaviors/popup.js'
+      import { applyTooltip } from '../src/js/behaviors/tooltip.js'
+
+      const containerToHighlight = document.getElementById('container-to-highlight')
+      const containerToTooltip = document.getElementById('container-to-tooltip')
+      
+     applyHighlight(containerToHighlight, { fadeDuration: 300 })
+     
+     const tooltip = document.createElement('div')
+     tooltip.style.backgroundColor = 'black'
+     tooltip.style.color = 'white'
+     tooltip.style.minWidth = '250px'
+     tooltip.style.padding = '0.5em'
+     tooltip.textContent = 'Tooltip text 12345 678910'
+
+     applyTooltip(containerToTooltip, tooltip, { fadeDuration: 300, position: 'bottom' })
+
+     const containerToClickOutsideIt = document.getElementById('container-to-click-outside-it')
+     /*
+     applyClickOutside(containerToClickOutsideIt, (element, target) => {
+      console.log(`Clicked outside element ${element.id}. What was clicked is ${target.tagName}`)
+     })
+    *
+    
+    /*applyClickOutside(containerToClickOutsideIt, { 
+      onOutsideClick: (element, target) => {
+        console.log(`Clicked outside element ${element.id}. What was clicked is ${target.tagName}`)
+      },
+      ignore: []
+     })
+
+     */
+     const clickToggleController = document.getElementById('click-toggle-controller')
+     const clickToggleRef = applyClickToggle(clickToggleController, { toggleTargetId: 'click-toggle-target', toggleMode: 'attribute'})
+     applyLongPress(clickToggleController, () => {
+      console.log('Long press detected on click toggle controller')
+     }, { delay: 2000 })
+
+     const popupRef = applyPopup(document.getElementById('popup-trigger'), { 
+      trigger: 'click', 
+      position: 'bottom', 
+      createPopupElement: () => {
+        const popupContent = document.createElement('div')
+        popupContent.id = 'popup-from-index'
+        popupContent.textContent = 'This is the popup content'
+        popupContent.style.padding = '1em'
+        popupContent.style.backgroundColor = 'white'
+        popupContent.style.border = '1px solid black'
+        return popupContent
+      }})
+
+      const menuElement = document.createElement('div')
+          menuElement.style.backgroundColor = 'white'
+          menuElement.style.border = '1px solid black'
+          menuElement.style.padding = '0.5em'
+          menuElement.textContent = `Context menu for ${containerToHighlight.id}`
+          menuElement.style.width = '200px'
+
+      const contextMenuRef = applyContextMenu(document.body, {
+        menu: menuElement,
+        onOpen: (context) => {
+          console.log(`Context menu opened for ${context.triggerEvent.target.id}`)
+        },
+        onClose: () => {
+          console.log('Menu item closed')
+        }
+      })
+      
+    </script>
+  </body>
+</html>

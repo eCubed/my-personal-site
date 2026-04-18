@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/main.css" />
+    <script type="module" src="/src/js/components/site-nav.js"></script>
+    <script type="module" src="/src/js/components/site-footer.js"></script>
+    <script type="module" src="/src/js/app-init.js"></script>
+    <script type="module" src="/src/js/components/site-card.js"></script>
+    <script type="module" src="/src/js/components/site-panel.js"></script>
+    <script type="module" src="/src/js/components/site-selectable-list.js"></script>
+    <script type="module" src="/src/js/components/site-vertical-stack.js"></script>
+    <script type="module" src="/src/js/components/site-horizontal-stack.js"></script>
+    <script type="module" src="/src/js/components/site-tabs.js"></script>
+    <script type="module" src="/src/js/components/site-counter.js"></script>
+    <script type="module" src="/src/js/components/site-callout.js"></script>
+    <script type="module" src="/src/js/components/site-chip.js"></script>
+    <script type="module" src="/src/js/components/overlay/ui-overlay.js"></script>
+    <script type="module" src="/src/js/components/overlay/overlay-utils.js"></script>
+    <script type="module" src="/src/js/components/site-carousel.js"></script>
+    <title>my-personal-site</title>
+  </head>
+  <body>
+    <style>
+      :root {
+        --primary-color: #ffc400;
+      }
+
+
+      site-chip.warning {
+        --chip-bg: #fff8db;
+        --chip-color: #5c4400;
+        --chip-border-color: #d4b100;
+      }
+
+      site-chip::part(button) {
+        box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
+      }
+
+      site-panel {
+        --heading-background-color: var(--primary-color);
+
+        /*
+        &::part(container) {
+          
+        }
+        */
+      }
+
+      
+
+    </style>
+    <site-nav></site-nav>
+    <div class="page-content">
+      <h1>Home</h1>
+      <site-carousel>
+        <div slot="slide">Item 1</div>
+        <div slot="slide">Item 2</div>
+        <div slot="slide">Item 3</div>
+      </site-carousel>      
+      <button type="button" id="toggleOverlayButton">Toggle Overlay</button>
+      <div id="chips">
+        <site-chip label="Filters"></site-chip>
+        <site-chip label="Archived" active></site-chip>
+        <site-chip label="Locked" disabled></site-chip>
+        <site-chip label="Warning" class="warning"></site-chip>
+      </div>
+     
+        <site-callout>
+          <h3 slot="title">Heads up</h3>
+          <p slot="content">This action cannot be undone.</p>
+        </site-callout>
+        <site-counter id="myCounter"></site-counter>
+        
+        <site-tabs>
+          <button type="button" slot="tab">Part A</button>
+          <button type="button" slot="tab">Part B</button>
+          <div slot="panel">Panel A</div>
+          <div slot="panel">Panel B</div>
+        </site-tabs>
+      
+        <site-panel title="My Panel Title" id="myPanel">
+          <p>This is my content, paragraph 1</p>
+          <p>This is my content, paragraph 2</p>
+        </site-panel>
+        <site-horizontal-stack padding="0">
+          <site-vertical-stack gap="0.5em" padding="0.5em">
+            <p>P1 in v stack</p>
+            <p>P2 in v stack</p>
+            <div>
+              Div in v stack
+            </div>
+          </site-vertical-stack>
+          <site-vertical-stack gap="0.5em" padding="0.5em">
+            <p>P1 in v stack</p>
+            <p>P2 in v stack</p>
+            <div>
+              Div in v stack
+            </div>
+          </site-vertical-stack>
+        </site-horizontal-stack>
+        <a class="button button--primary" href="/about/">About Button</a>
+        <site-card>
+          <h1>My Card</h1>
+          <div>
+            Card contents
+          </div>
+        </site-card>
+        
+        <site-selectable-list id="my-list"></site-selectable-list>
+        <site-footer></site-footer>
+    </div>
+    <script type="module">
+        import { addOverlay, removeOverlay } from '/src/js/components/overlay/overlay-utils.js'
+        import { SiteChip } from '/src/js/components/site-chip.js'
+
+
+        document.addEventListener('chip-toggle', (event) => {
+          console.log('toggled:', event.target, event.detail.active);
+        });
+
+        const myList = document.getElementById('my-list')
+        const items = ['apples', 'bananas', 'oranges']
+        myList.items = items;
+        myList.selectedItem = items[1]
+        myList.itemRenderer = (item) => {
+          const baseElement = document.createElement('div')
+          baseElement.innerText = `Fruit: ${item}`
+
+          return baseElement
+        }
+
+        myList.items = [...myList.items, 'ziti']
+
+        console.log(`The selected item is ${myList.selectedItem}`)
+
+        myList.addEventListener('item-selected', (e) => {
+          console.log(`The selected item from the handler is ${JSON.stringify(e.detail)}`)
+        })
+
+        const myPanel = document.getElementById('myPanel')
+        setTimeout(() => {
+          myPanel.setAttribute('title', 'Title Change after 5 seconds')
+        }, 5000)
+
+        const myCounter = document.getElementById('myCounter')
+        myCounter.addEventListener('countChanged', (e) => {
+          console.log(`Count changed: ${e.detail}`)
+        })
+
+        myCounter.count = 10
+
+        // const programmaticChip = document.createElement('site-chip')
+        const programmaticChip = new SiteChip()
+        programmaticChip.label = 'Programmatically added chip'
+        
+        const chipsDiv = document.getElementById('chips')
+        chipsDiv.appendChild(programmaticChip)
+
+        let isOverlaying = false
+
+        const spinner = document.createElement('div')
+        spinner.textContent = "Loading..."
+
+        const toggleOverlayButton = document.getElementById('toggleOverlayButton')
+        toggleOverlayButton.addEventListener('click', async () => {
+          if (!isOverlaying) {
+            await addOverlay(myPanel, { 
+              backgroundColor: '#00990077',
+              fadeDuration: 200,
+              content: spinner,
+              position: 'center'
+            })
+            isOverlaying = true 
+          } else {
+            await removeOverlay(myPanel)
+            isOverlaying = false
+          }
+        })
+
+      </script>
+    
+  </body>
+</html>
