@@ -61,6 +61,7 @@
     </style>
     <div style="margin-bottom: 1em">
       <site-editable-popup-text id="editable-popup-element" text="This is the initial text. Click to edit."></site-editable-popup-text>
+    
     </div>
     <div>
         This is the thing <em>we</em> need to highlight: <span id="container-to-tooltip">This</span>.
@@ -105,38 +106,25 @@
      applyTooltip(containerToTooltip, tooltip, { fadeDuration: 300, position: 'bottom' })
 
      const containerToClickOutsideIt = document.getElementById('container-to-click-outside-it')
-     /*
-     applyClickOutside(containerToClickOutsideIt, (element, target) => {
-      console.log(`Clicked outside element ${element.id}. What was clicked is ${target.tagName}`)
-     })
-    *
     
-    /*applyClickOutside(containerToClickOutsideIt, { 
-      onOutsideClick: (element, target) => {
-        console.log(`Clicked outside element ${element.id}. What was clicked is ${target.tagName}`)
-      },
-      ignore: []
-     })
-
-     */
      const clickToggleController = document.getElementById('click-toggle-controller')
      const clickToggleRef = applyClickToggle(clickToggleController, { toggleTargetId: 'click-toggle-target', toggleMode: 'attribute'})
      applyLongPress(clickToggleController, () => {
       console.log('Long press detected on click toggle controller')
      }, { delay: 2000 })
 
-     const popupRef = applyPopup(document.getElementById('popup-trigger'), { 
+     const popupContent = document.createElement('div')
+     popupContent.id = 'popup-from-index'
+     popupContent.textContent = 'This is the popup content'
+     popupContent.style.padding = '1em'
+     popupContent.style.backgroundColor = 'white'
+     popupContent.style.border = '1px solid black'
+
+     const popupRef = applyPopup(popupContent, { 
+      anchor: document.getElementById('popup-trigger'),
       trigger: 'click', 
-      position: 'bottom', 
-      createPopupElement: () => {
-        const popupContent = document.createElement('div')
-        popupContent.id = 'popup-from-index'
-        popupContent.textContent = 'This is the popup content'
-        popupContent.style.padding = '1em'
-        popupContent.style.backgroundColor = 'white'
-        popupContent.style.border = '1px solid black'
-        return popupContent
-      }})
+      position: 'bottom'
+    })
 
       const menuElement = document.createElement('div')
           menuElement.style.backgroundColor = 'white'

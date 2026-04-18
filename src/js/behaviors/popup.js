@@ -1,45 +1,51 @@
 import { isElement } from '../base/element-utils.js'
-import { isFunction } from '../base/primitive-utils.js'
 import { applyClickOutside } from './click-outside.js'
 import { applyDismissOnEscape } from './dismiss-on-escape.js'
 
 
 export const popupDefaults = {
   trigger: 'click',
-  createPopupElement: null,
-  position: 'bottom', // top, left, right
+  anchor: null,
+  position: 'bottom', // top, left, right - default is bottom - applies when anchor is provided
+  x: 0, // used when anchor is proveded - absolute positioning based on viewport
+  y: 0, // used when anchor is proveded - absolute positioning based on viewport
   fadeDuration: 300,
   ignore: []
 }
 
 
-export const applyPopup = (host, options = {}) => {
-  console.log(`Applying popup for host ${host.id}`)
-  if (!isElement(host))
-    throw new Error('Host must be an element')
-
-  if (!isFunction(options.createPopupElement))
-    throw new Error('createPopupElement must be an async function')
-
+export const applyPopup = (popupElement, options = {}) => {  
   const effectiveOptions = { ...popupDefaults, ...options }
 
+  if (!isElement(popupElement))
+    throw new Error('Popup element must be a DOM element')
+
+  if (effectiveOptions.anchor && !isElement(effectiveOptions.anchor))
+    throw new Error('Anchor must be a DOM element')
+  
   let isOpen = false
-  const currentPopup = effectiveOptions.createPopupElement()
-  if (!isElement(currentPopup))
-    throw new Error('elementToPopup must be an element')
   
-  currentPopup.hidden = true
-  currentPopup.style.position = 'absolute'
-  currentPopup.style.opacity = 0
-  currentPopup.style.transition = `opacity ${effectiveOptions.fadeDuration}ms ease-in-out`
-  currentPopup.style.zIndex = 9999
-  document.body.appendChild(currentPopup)
+  popupElement.hidden = true
+  popupElement.style.position = 'absolute'
+  popupElement.style.opacity = 0
+  popupElement.style.transition = `opacity ${effectiveOptions.fadeDuration}ms ease-in-out`
+  popupElement.style.zIndex = 9999
+  document.body.appendChild(popupElement)
+
+  popupElement.addEventListener('transitionend', () => {
+  if (popupElement.style.opacity === '0') {
+    popupElement.hidden = true
+      isOpen = false
+    }
+  })
+
+  const effectiveIgnoreList = effectiveOptions.anchor ? [effectiveOptions.anchor, ...effectiveOptions.ignore] : effectiveOptions.ignore
   
-  const clickOutsideBehavior = applyClickOutside(currentPopup, {
+  const clickOutsideBehavior = applyClickOutside(popupElement, {
     onOutsideClick: () => {
       close()
     },
-    ignore: [host, ...effectiveOptions.ignore]
+    ignore: effectiveIgnoreList
   })
 
   const dismissOnEscapeBehavior = applyDismissOnEscape({
@@ -48,6 +54,74 @@ export const applyPopup = (host, options = {}) => {
    } 
   })
 
+  const open = () => {
+    
+    popupElement.hidden = false    
+    const hostRect = effectiveOptions.anchor.getBoundingClientRect()
+    const popupRect = popupElement.getBoundingClientRect()
+    switch (effectiveOptions.position) {
+      case 'top':
+        popupElement.style.left = `${hostRect.left}px`
+        popupElement.style.top = `${hostRect.top - popupRect.height}px`
+        break
+      case 'left':
+        popupElement.style.left = `${hostRect.left - popupRect.width}px`
+        popupElement.style.top = `${hostRect.top}px`
+        break
+      case 'right':
+        popupElement.style.left = `${hostRect.right}px`
+        popupElement.style.top = `${hostRect.top}px`
+        break 
+      case 'bottom':
+        popupElement.style.left = `${hostRect.left}px`
+        popupElement.style.top = `${hostRect.bottom}px`
+        break
+    }
+    
+    popupElement.getBoundingClientRect() // Force reflow
+    popupElement.style.opacity = 1
+    isOpen = true
+    
+   
+  }
+
+  const openAt = (x, y) => {
+    
+    popupElement.hidden = false
+    popupElement.style.position = 'fixed'
+    popupElement.style.visibility = 'hidden'
+    popupElement.getBoundingClientRect() // Force reflow
+    popupElement.style.opacity = 1
+
+    const rect = popupElement.getBoundingClientRect()
+    console.log('Menu dimensions:', rect.width, rect.height)
+
+    let left = x
+    let top = y
+
+    if (left + rect.width > window.innerWidth) {
+      left = window.innerWidth - rect.width
+    }
+
+    if (top + rect.height > window.innerHeight) {
+      top = window.innerHeight - rect.height
+    }
+    
+    popupElement.style.left = `${Math.max(0, left)}px`
+    popupElement.style.top = `${Math.max(0, top)}px`
+    isOpen = true
+    popupElement.style.visibility = 'visible'
+  }
+
+  const close = () => {
+    
+    if (popupElement) {
+      popupElement.style.opacity = 0 
+      isOpen = false
+    }
+  }
+
+  
   const onHostClick = () => {
     
     if(isOpen) {
@@ -59,60 +133,17 @@ export const applyPopup = (host, options = {}) => {
     }
   }
   
-  host.addEventListener(effectiveOptions.trigger, onHostClick)
+  effectiveOptions.anchor?.addEventListener(effectiveOptions.trigger, onHostClick)
  
-  const open = () => {
-    
-    currentPopup.hidden = false    
-    const hostRect = host.getBoundingClientRect()
-    const popupRect = currentPopup.getBoundingClientRect()
-    switch (effectiveOptions.position) {
-      case 'top':
-        currentPopup.style.left = `${hostRect.left}px`
-        currentPopup.style.top = `${hostRect.top - popupRect.height}px`
-        break
-      case 'left':
-        currentPopup.style.left = `${hostRect.left - popupRect.width}px`
-        currentPopup.style.top = `${hostRect.top}px`
-        break
-      case 'right':
-        currentPopup.style.left = `${hostRect.right}px`
-        currentPopup.style.top = `${hostRect.top}px`
-        break 
-      case 'bottom':
-        currentPopup.style.left = `${hostRect.left}px`
-        currentPopup.style.top = `${hostRect.bottom}px`
-        break
-    }
-    
-    currentPopup.getBoundingClientRect() // Force reflow
-    currentPopup.style.opacity = 1
-    isOpen = true
-    
-    currentPopup.addEventListener('transitionend', () => {
-      if (currentPopup.style.opacity === '0') {
-        currentPopup.hidden = true
-        isOpen = false
-      }
-    })
-  }
-
-  const close = () => {
-    
-    if (currentPopup) {
-      currentPopup.style.opacity = 0 
-      isOpen = false
-    }
-  }
-
   return {
     destroy: () => {
-      host.removeEventListener(effectiveOptions.trigger, onHostClick)
+      effectiveOptions.anchor.removeEventListener(effectiveOptions.trigger, onHostClick)
       clickOutsideBehavior?.destroy()
       dismissOnEscapeBehavior?.destroy()
     },
-    open: open,
-    close: close,
+    open,
+    openAt,
+    close,
     isOpen: () => isOpen
   }
 }

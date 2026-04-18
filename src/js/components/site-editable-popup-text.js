@@ -76,9 +76,11 @@ export class EditablePopupText extends HTMLElement {
   }
 
   #attachEvents() {
+    const popup = this.#createEditablePopup()
     const trigger = this.shadowRoot.querySelector('#popup-trigger-for-edit')
-    this.#popupBehavior = applyPopup(trigger, {
+    this.#popupBehavior = applyPopup(popup, {
       trigger: 'click',
+      anchor: trigger,
       createPopupElement: () => this.#createEditablePopup(),
       position: 'bottom'
     })
