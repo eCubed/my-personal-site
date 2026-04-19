@@ -72,7 +72,7 @@
     <div>
       This is the div with a button to trigger a popup: <button type="button" id="popup-trigger">Open Popup</button>
     </div>
-    <div id="container-to-highlight" data-action="highlight">
+    <div id="container-to-highlight" data-key="highlight 123">
       Highlight me
     </div>
     <div id="click-toggle-target" data-action="toggle">
@@ -139,10 +139,26 @@
 
     const contextMenuRef = applyContextMenu(document.body, {
       menu: menuElement,
-      provideContext: () => {
-        return { info: 'Additional context information' }
+      provideContext: (event) => {
+        /* This function will be called when the context menu is triggered, 
+           and its return value will be passed to the onAction callback when a menu item is clicked. 
+           Here, we're gathering some information about the event target to provide as context for the menu actions.
+
+           The element that we right-clicked on (or long-pressed) may have a data-key attribute, and we want to include that in the context if it exists.
+           When we intend for an element to be right-clicked to trigger the context menu, we can give it a data-key attribute with some relevant information. 
+           Then, in the provideContext function, we look for the closest ancestor of the event target that has a data-key attribute and include that in the context object.
+
+           It is important to note that we get to decide what the context object looks like and what information it contains. 
+           The specific context object structure will be relevant to each application of applyContextMenu.
+        */
+        const dataKey = event.target.closest('[data-key]')?.getAttribute('data-key')
+        return { x: event.clientX, y: event.clientY, id: event.target.id, dataKey: dataKey  }
       },
       onAction: ({currentContext, action}) => {
+        /* The onAction callback will be called when a menu item is clicked, and it receives an object with the currentContext (the value returned by provideContext) 
+           and the action (the value of the data-action attribute of the clicked menu item). From here, we can perform whatever logic we want based on the specific action 
+           that was triggered and the context in which it was triggered.
+        */
         console.log('Menu action:', action, 'with context:', currentContext)
       }
     })

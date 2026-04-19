@@ -3,8 +3,8 @@ import { isFunction } from '../base/primitive-utils.js'
 import { applyPopup } from './popup.js'
 export const CONTEXT_MENU_DEFAULTS = {
   menu: null,
-  provideContext: null, // function that returns context object to be passed to onOpen callback
-  onAction: null, // callback that receives context and action id when a menu item is clicked
+  provideContext: null, // function that returns context object to be passed to onAction callback
+  onAction: null, // callback that receives context and action when a menu item is clicked
 }
 
 export const applyContextMenu = (target, options = {}) => {
@@ -34,7 +34,7 @@ export const applyContextMenu = (target, options = {}) => {
 
   const handleContextMenu = (event) => {
     event.preventDefault()
-    currentContext = effectiveOptions.provideContext ? effectiveOptions.provideContext() : null
+    currentContext = effectiveOptions.provideContext ? effectiveOptions.provideContext(event) : null
     popupRef.openAt(event.clientX, event.clientY)
   }
 
@@ -47,7 +47,6 @@ export const applyContextMenu = (target, options = {}) => {
   const menuClickHandler = (event) => {
     
     const elementWithAction = event.target.closest('[data-action]')   
-    console.log(`Menu item clicked with action: ${elementWithAction.id}; target: ${target.id}`)
     const action = elementWithAction ? elementWithAction.dataset.action : null
     if (action && isFunction(effectiveOptions.onAction)) {
       effectiveOptions.onAction({currentContext, action})
