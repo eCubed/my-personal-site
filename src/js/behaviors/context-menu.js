@@ -1,12 +1,17 @@
 import { isElement } from '../base/element-utils'
+import { isFunction } from '../base/primitive-utils.js'
 import { applyPopup } from './popup.js'
 export const CONTEXT_MENU_DEFAULTS = {
   menu: null,
+  provideContext: null, // function that returns context object to be passed to onOpen callback
+  onAction: null, // callback that receives context and action id when a menu item is clicked
 }
 
 export const applyContextMenu = (target, options = {}) => {
   const effectiveOptions = {...CONTEXT_MENU_DEFAULTS, ...options }
   const { menu } = effectiveOptions
+
+  let currentContext = null
 
   if(!isElement(target))
     throw new Error('Target must be a DOM element')
@@ -29,16 +34,36 @@ export const applyContextMenu = (target, options = {}) => {
 
   const handleContextMenu = (event) => {
     event.preventDefault()
+    currentContext = effectiveOptions.provideContext ? effectiveOptions.provideContext() : null
     popupRef.openAt(event.clientX, event.clientY)
   }
 
+  const close = () => {
+    popupRef.close()
+  }
+
   target.addEventListener('contextmenu', handleContextMenu)
+
+  const menuClickHandler = (event) => {
+    
+    const elementWithAction = event.target.closest('[data-action]')   
+    console.log(`Menu item clicked with action: ${elementWithAction.id}; target: ${target.id}`)
+    const action = elementWithAction ? elementWithAction.dataset.action : null
+    if (action && isFunction(effectiveOptions.onAction)) {
+      effectiveOptions.onAction({currentContext, action})
+      close()
+    }
+  }
+
+  menu.addEventListener('click', menuClickHandler)
   
   return {
     destroy: () => {
       target.removeEventListener('contextmenu', handleContextMenu)
+      menu.removeEventListener('click', menuClickHandler)
       popupRef.destroy()
-    }
+    },
+    close,
   }
 
 }
