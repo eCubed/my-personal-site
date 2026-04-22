@@ -16,6 +16,7 @@
     <script type="module" src="/src/js/behaviors/popup.js"></script>
     <script type="module" src="/src/js/components/site-editable-popup-text.js"></script>
     <script type="module" src="/src/js/behaviors/context-menu.js"></script>
+    <script type="module" src="/src/js/components/dialog/dialog.js"></script>
   </head>
   <body>
     <site-nav></site-nav>
@@ -59,6 +60,9 @@
         gap: 0.5em;
       }
     </style>
+    <div>
+      <button type="button" class="button button--primary" id="dialog-trigger">Open Dialog</button>
+    </div>
     <div style="margin-bottom: 1em">
       <site-editable-popup-text id="editable-popup-element" text="This is the initial text. Click to edit."></site-editable-popup-text>
     
@@ -90,6 +94,7 @@
       import { applyLongPress } from '../src/js/behaviors/long-press.js'      
       import { applyPopup } from '../src/js/behaviors/popup.js'
       import { applyTooltip } from '../src/js/behaviors/tooltip.js'
+      import { openDialog } from '../src/js/components/dialog/dialog.js'
 
       const containerToHighlight = document.getElementById('container-to-highlight')
       const containerToTooltip = document.getElementById('container-to-tooltip')
@@ -162,6 +167,40 @@
         console.log('Menu action:', action, 'with context:', currentContext)
       }
     })
+
+    const dialogContent = document.createElement('div')
+    dialogContent.innerHTML = `
+      <h2>Dialog Title</h2>
+      <p>This is the content of the dialog.</p>
+      <button id="dialog-close-button">Close Dialog</button>
+    `
+
+    const dialogTrigger = document.getElementById('dialog-trigger')
+    const dialogCloseButton = dialogContent.querySelector('#dialog-close-button')
+    let dialogRef = null
+    dialogTrigger.addEventListener('click', () => { 
+
+      dialogRef = openDialog(dialogContent, { data: { message: 'Hello from dialog!' } })
+    })
+
+    dialogCloseButton.addEventListener('click', async () => {
+      if(dialogRef) {
+        dialogRef.close('Dialog closed by user')
+        
+       
+        const res = await dialogRef?.afterClosed((res) => {          
+          console.log('Dialog closed with result (afterClosed):', res)
+        })
+        
+        
+        const resPromise = await dialogRef?.closed
+        console.log('Dialog closed with result (promise Closed):', resPromise)
+        
+      }
+    })
+
+    
+      
 
       
     </script>

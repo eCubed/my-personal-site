@@ -1,0 +1,51 @@
+.ui-dialog-host {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.ui-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.45);
+  opacity: 0;
+  transition: opacity var(--ui-dialog-fade-duration, 200ms) ease;
+}
+
+.ui-dialog-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.98);
+  opacity: 0;
+  transition:
+    opacity var(--ui-dialog-fade-duration, 200ms) ease,
+    transform var(--ui-dialog-fade-duration, 200ms) ease;
+
+  max-width: min(90vw, 40rem);
+  max-height: 90vh;
+  overflow: auto;
+
+  background: white;
+  color: inherit;
+  border-radius: 0.75rem;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.25);
+}
+
+.ui-dialog-host[data-open] .ui-dialog-backdrop {
+  opacity: 1;
+}
+
+.ui-dialog-host[data-open] .ui-dialog-panel {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.ui-dialog-host[data-closing] .ui-dialog-backdrop {
+  opacity: 0;
+}
+
+.ui-dialog-host[data-closing] .ui-dialog-panel {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.98);
+}
