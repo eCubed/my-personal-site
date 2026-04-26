@@ -1,6 +1,7 @@
 import { isFunction } from '../../base/primitive-utils.js'
 
 export const DIALOG_DEFAULTS = {
+  title: 'Dialog Title', // Default title for the dialog, can be overridden by options when opening a dialog
   fadeDuration: 300, // Duration of fade in/out animations in milliseconds
   closeOnBackdropClick: true, // Whether clicking on the backdrop should close the dialog
   closeOnEscape: true, // Whether pressing the Escape key should close the dialog
@@ -36,6 +37,18 @@ export const openDialog = (dialogContentElement, options = {}) => {
     backdrop.classList.add(...backdropClass.split(/\s+/).filter(Boolean));
   }
 
+  const title = document.createElement('div')
+  title.className = 'ui-dialog-title'
+  title.innerText = effectiveOptions.title
+  const dialogCloseButton = document.createElement('button')
+  dialogCloseButton.className = 'ui-dialog-close-button'
+  dialogCloseButton.setAttribute('aria-label', 'Close dialog')
+  dialogCloseButton.innerHTML = '&times;'
+
+  const toolbar = document.createElement('div')
+  toolbar.className = 'ui-dialog-toolbar'
+  toolbar.append(title, dialogCloseButton)
+
   const panel = document.createElement('div');
   panel.className = 'ui-dialog-panel';
   if (panelClass) {
@@ -49,7 +62,7 @@ export const openDialog = (dialogContentElement, options = {}) => {
   backdrop.style.setProperty('--ui-dialog-fade-duration', `${fadeDuration}ms`);
   panel.style.setProperty('--ui-dialog-fade-duration', `${fadeDuration}ms`);
 
-   const finalizeClose =() =>{
+   const finalizeClose =() => {
     cleanup()
 
     for (const callback of afterClosedCallbacks) {
@@ -119,6 +132,7 @@ export const openDialog = (dialogContentElement, options = {}) => {
   dialogContentElement.dialogRef = dialogRef
   dialogContentElement.dialogData = data
 
+  panel.append(toolbar)
   panel.append(dialogContentElement)
   host.append(backdrop, panel);
   document.body.append(host);
@@ -131,6 +145,7 @@ export const openDialog = (dialogContentElement, options = {}) => {
   const cleanup = () => {
     document.removeEventListener('keydown', onDocumentKeyDown);
     backdrop.removeEventListener('click', onBackdropClick);
+    dialogCloseButton.removeEventListener('click', onDialogCloseButtonClick);
     document.body.style.overflow = originalBodyOverflow;
 
     if (host.parentNode) {
@@ -146,12 +161,18 @@ export const openDialog = (dialogContentElement, options = {}) => {
     }
   }
 
+  const onDialogCloseButtonClick = () => {
+    close(undefined)
+  }
+
   const onDocumentKeyDown = (event) => {
     if (event.key === 'Escape' && closeOnEscape) {
       event.preventDefault()
       close(undefined)
     }
   }
+
+  dialogCloseButton.addEventListener('click', onDialogCloseButtonClick)
 
   if (closeOnBackdropClick) {
     backdrop.addEventListener('click', onBackdropClick)

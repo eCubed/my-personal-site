@@ -195,6 +195,8 @@
         
         const resPromise = await dialogRef?.closed
         console.log('Dialog closed with result (promise Closed):', resPromise)
+
+        console.log(`The data passed to the dialog was:`, dialogContent.dialogData)
         
       }
     })

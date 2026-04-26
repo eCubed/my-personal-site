@@ -28,8 +28,37 @@
 
   background: white;
   color: inherit;
-  border-radius: 0.75rem;
+  border-radius: 0.25rem;
   box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.25);
+}
+
+.ui-dialog-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  color: var(--ui-dialog-toolbar-color, white);
+  background: var(--ui-dialog-toolbar-background-color, #333);
+}
+
+.ui-dialog-title {
+  font-size: 1.25rem;
+  padding-left: 0.25rem;
+  font-weight: 600;  
+}
+
+.ui-dialog-close-button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .ui-dialog-host[data-open] .ui-dialog-backdrop {

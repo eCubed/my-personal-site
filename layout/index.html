@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+  </head>
+  <body>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      .app-shell {
+        display: flex;
+        min-height: 100vh;
+        gap: 16px;
+        padding: 16px;
+      }
+
+      .sidebar {
+        flex: 0 0 240px;
+        padding: 16px;
+        border: 1px solid #ccc;
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      .toolbar,
+      .filters,
+      .content {
+        padding: 16px;
+        border: 1px solid #ccc;
+      }
+
+      .grid-container {
+        display: grid;
+        /* grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+      }
+
+      .grid-item {
+        padding: 16px;
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+
+      .grid-page-layout {
+        display: grid;
+        grid-template-areas:
+          "header header"
+          "main aside"
+          "footer footer";
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+      }
+
+      .grid-page-layout > * {
+        padding: 16px;
+        border: 1px solid #ccc;
+      }
+
+      .grid-page-layout header {
+        grid-area: header;
+      }
+      .grid-page-layout main {
+        grid-area: main;
+      }
+      .grid-page-layout aside {
+        grid-area: aside;
+      }
+      .grid-page-layout footer {
+        grid-area: footer;
+      }
+    </style>
+    <div class="app-shell">
+      <aside class="sidebar">
+        Sidebar
+      </aside>
+
+      <main class="main">
+        <header class="toolbar">
+          <h1>Users</h1>
+          <button type="button">Add User</button>
+        </header>
+
+        <section class="filters">
+          <input placeholder="Search users..." />
+          <select>
+            <option>All statuses</option>
+          </select>
+          <button type="button">Apply</button>
+        </section>
+
+        <section class="content">
+          Data table goes here
+        </section>
+        <section class="content">
+          <h1>Grids</h1>
+          <div class="grid-container">
+            <div class="grid-item">Item 1</div>
+            <div class="grid-item">Item 2</div>
+            <div class="grid-item">Item 3</div>
+            <div class="grid-item">Item 4</div>
+          </div>
+        </section>
+        <section class="content">
+          <div class="grid-page-layout">
+            <header>Header</header>
+            <main>Main content</main>
+            <aside>Sidebar</aside>
+            <footer>Footer</footer>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

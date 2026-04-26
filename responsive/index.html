@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        line-height: 1.5;
+        color: #1f2937;
+        background: #f9fafb;
+      }
+
+      /* Level 2: Fluid page sizing */
+
+      .page {
+        width: min(100% - 2rem, 1200px);
+        margin-inline: auto;
+      }
+
+      section,
+      .page-layout {
+        margin-block: clamp(2rem, 6vw, 5rem);
+      }
+
+      /* Hero */
+
+      .hero {
+        padding-block: clamp(3rem, 8vw, 7rem);
+      }
+
+      .eyebrow {
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+        color: #4b5563;
+      }
+
+      .hero__title {
+        max-width: 12ch;
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        line-height: 1;
+        margin: 0;
+      }
+
+      .hero__text {
+        max-width: 60ch;
+        font-size: clamp(1rem, 2vw, 1.25rem);
+      }
+
+      /* Level 1: Intrinsic layout */
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        gap: 1rem;
+      }
+
+      .feature-card,
+      .article-card,
+      .sidebar,
+      .cta {
+        padding: 1.25rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+        background: white;
+      }
+
+      /* Level 4: Page-level media query */
+
+      .page-layout {
+        display: grid;
+        gap: 2rem;
+      }
+
+      @media (width >= 64rem) {
+        .page-layout {
+          grid-template-columns: 16rem 1fr;
+          align-items: start;
+        }
+
+        .sidebar {
+          position: sticky;
+          top: 1rem;
+        }
+      }
+
+      /* Level 3: Container query */
+
+      .articles {
+        container-type: inline-size;
+        display: grid;
+        gap: 1rem;
+      }
+
+      .article-card {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .article-card__media {
+        min-height: 10rem;
+        border-radius: 0.75rem;
+        background: #e5e7eb;
+      }
+
+      @container (width >= 40rem) {
+        .article-card {
+          grid-template-columns: 12rem 1fr;
+          align-items: center;
+        }
+
+        .article-card__media {
+          min-height: 8rem;
+        }
+      }
+
+      /* CTA */
+
+      .cta {
+        text-align: center;
+      }
+
+      .cta h2 {
+        font-size: clamp(1.75rem, 4vw, 3rem);
+        line-height: 1.1;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Responsive CSS Roadmap</p>
+        <h1 class="hero__title">A modern responsive page layout</h1>
+        <p class="hero__text">
+          This page uses intrinsic layout, fluid sizing, container queries, and media queries.
+        </p>
+      </section>
+
+      <section class="features">
+        <article class="feature-card">
+          <h2>Intrinsic layout</h2>
+          <p>Cards wrap naturally using auto-fit and minmax.</p>
+        </article>
+
+        <article class="feature-card">
+          <h2>Fluid sizing</h2>
+          <p>Widths, spacing, and type scale with clamp and min.</p>
+        </article>
+
+        <article class="feature-card">
+          <h2>Container queries</h2>
+          <p>Components respond to their own available space.</p>
+        </article>
+      </section>
+
+      <div class="page-layout">
+        <aside class="sidebar">
+          <h2>Topics</h2>
+          <ul>
+            <li>Grid</li>
+            <li>Flex</li>
+            <li>Intrinsic sizing</li>
+            <li>Media queries</li>
+          </ul>
+        </aside>
+
+        <section class="articles">
+          <article class="article-card">
+            <div class="article-card__media"></div>
+            <div>
+              <h2>Article one</h2>
+              <p>
+                This card stacks when narrow and becomes horizontal when its container is wide enough.
+              </p>
+            </div>
+          </article>
+
+          <article class="article-card">
+            <div class="article-card__media"></div>
+            <div>
+              <h2>Article two</h2>
+              <p>
+                The breakpoint belongs to the component, not the full browser viewport.
+              </p>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <section class="cta">
+        <h2>Build responsive layouts in layers</h2>
+        <p>Start with flexible CSS. Add media queries only when the layout itself needs to change.</p>
+      </section>
+    </main>
+  </body>
+</html>
