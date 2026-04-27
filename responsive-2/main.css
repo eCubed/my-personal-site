@@ -1,0 +1,121 @@
+:root {
+  --main-color: #5d0088;
+  --text-on-main-color: #fafafa;
+  --app-background-color: #f0f0f0;
+  --link-color: #91009e;
+  --panel-color: #dfdfdf;
+  --text-color: #333333;
+  --input-border-color: #ccc;
+  --input-background-color: #efefef;
+  --base-font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --base-font-size: 16px;
+  --base-gap: 1rem;
+  --base-padding: 1rem;
+  --base-border-radius: 0.5rem;
+
+  font-family: var(--base-font);
+  background-color: var(--app-background-color);
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Basic Layout */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-gap);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--base-gap);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--base-gap);
+}
+
+.split-row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--base-gap);
+  justify-content: space-between;
+}
+
+.vertical-center {
+  display: flex;
+  align-items: center;
+}
+
+.panel {
+  background-color: var(--panel-color);
+  padding: var(--base-padding);
+  border-radius: var(--base-border-radius);
+  border: solid 1px var(--input-border-color);
+  color: var(--text-color);
+}
+
+/* Basic Elements */
+button, .button {
+  background-color: var(--main-color);
+  color: var(--text-on-main-color);
+  border: none;
+  padding: var(--base-padding);
+  border-radius: var(--base-border-radius);
+  cursor: pointer;
+  font-family: var(--base-font);
+  font-size: var(--base-font-size);
+  transition: background-color 0.3s ease-in-out;
+}
+
+button:hover, .button:hover {
+  background-color:var(--link-color);
+}
+
+input, textarea {
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-background-color);
+  padding: var(--base-padding);
+  border-radius: var(--base-border-radius);
+  font-family: var(--base-font);
+  font-size: var(--base-font-size);
+}
+
+a {
+  color: var(--link-color);
+  font-family: var(--base-font);
+  font-size: var(--base-font-size);
+}
+
+
+/* Navigation */
+nav {
+  background-color: var(--main-color);
+  color: var(--text-on-main-color);
+  padding-left: var(--base-padding);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: var(--base-gap);
+}
+
+nav ul li {
+  padding: var(--base-padding);
+}
+
+nav ul li a {
+  color: var(--text-on-main-color);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 150%;
+}

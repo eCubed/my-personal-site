@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./main.css" />
+    <style>
+      .page {
+        width: min(100% - var(--base-padding) * 2, 64em);
+        margin-inline: auto;
+      }
+
+      .hero {
+        background-color: #f5d6ff;
+        padding-block: clamp(3rem, 8vw, 7rem);
+      }
+
+      .hero__title {       
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        line-height: 1;
+        margin: 0;
+      }
+
+      footer {
+        background-color: var(--main-color);
+        color: var(--text-on-main-color);
+        padding-block: clamp(1rem, 4vw, 3rem);
+        text-align: center;
+      }
+    </style>    
+  </head>
+  <body>
+    <div class="page">
+      <nav class="split-row vertical-center">
+        <h2>My Website</h2>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="stack">
+        <section class="hero panel">
+          <h1 class="hero__title">Welcome to My Website</h1>
+            <p class="hero__text">
+              This is a simple responsive design example using CSS. Resize the
+              browser window to see how the layout adapts to different screen sizes.
+            </p>
+        </section>
+        <section class="panel">
+          <h2>About Us</h2>
+          <p>
+            We are a team of passionate developers dedicated to creating
+            responsive and user-friendly websites. Our goal is to provide the
+            best experience for our users, regardless of the device they are
+            using.
+          </p>
+        </section>
+        <div class="grid">
+          <article class="panel">
+            <h3>Our Services</h3>
+            <p>
+              We offer a wide range of services including web development,
+              design, and consulting. Our team is skilled in the latest
+              technologies and trends to ensure your project is a success.
+            </p>
+          </article>
+          <article class="panel">
+            <h3>Our Services</h3>
+            <p>
+              We offer a wide range of services including web development,
+              design, and consulting. Our team is skilled in the latest
+              technologies and trends to ensure your project is a success.
+            </p>
+          </article>
+          <article class="panel">
+            <h3>Our Services</h3>
+            <p>
+              We offer a wide range of services including web development,
+              design, and consulting. Our team is skilled in the latest
+              technologies and trends to ensure your project is a success.
+            </p>
+          </article>
+        </div>
+        <footer>
+          <p>&copy; 2024 My Website. All rights reserved.</p>
+        </footer>
+      </div>
+     
+    </div>
+  </body>
+</html>
