@@ -20,6 +20,7 @@
     <script type="module" src="/src/js/components/overlay/ui-overlay.js"></script>
     <script type="module" src="/src/js/components/overlay/overlay-utils.js"></script>
     <script type="module" src="/src/js/components/site-carousel.js"></script>
+    <script type="module" src="/src/js/components/site-ticker.js"></script>
     <title>my-personal-site</title>
   </head>
   <body>
@@ -55,6 +56,8 @@
     <site-nav></site-nav>
     <div class="page-content">
       <h1>Home</h1>
+      <site-ticker id="myTicker"></site-ticker>
+      <button type="button" id="toggleTickerButton">Toggle Ticker Animation</button>
       <site-carousel>
         <div slot="slide">Item 1</div>
         <div slot="slide">Item 2</div>
@@ -67,7 +70,6 @@
         <site-chip label="Locked" disabled></site-chip>
         <site-chip label="Warning" class="warning"></site-chip>
       </div>
-     
         <site-callout>
           <h3 slot="title">Heads up</h3>
           <p slot="content">This action cannot be undone.</p>
@@ -177,6 +179,26 @@
           } else {
             await removeOverlay(myPanel)
             isOverlaying = false
+          }
+        })
+
+        const myTicker = document.getElementById('myTicker')
+        myTicker.backgroundColor = '#000088'
+        //myTicker.style.width = '300px';
+        myTicker.messages = [
+          'Breaking news: Web Components are awesome!',
+          'Latest update: My personal site is coming together nicely.',
+          'Did you know? You can create reusable components with Web Components.'
+        ]
+
+        myTicker.startAnimation();
+
+        const toggleTickerButton = document.getElementById('toggleTickerButton')
+        toggleTickerButton.addEventListener('click', () => {
+          if (myTicker.isAnimating) {
+            myTicker.stopAnimation();
+          } else {
+            myTicker.startAnimation();
           }
         })
 
