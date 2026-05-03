@@ -1,0 +1,12 @@
+.shell {
+  display: grid;
+  margin: auto;
+  width: min(100%, 100rem);
+  height: 100vh;
+}
+
+.floating-head-foot {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+

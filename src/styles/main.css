@@ -2,6 +2,7 @@
 @import './base/base.css';
 
 @import './layout/container.css';
+@import './layout/pages.css';
 @import './layout/section.css';
 
 @import './components/button.css';

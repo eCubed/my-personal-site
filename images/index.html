@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Images</title>
+    <link rel="stylesheet" href="../src/styles/main.css" />
+    <style>
+      .container {
+        width: min(100%, 48rem);
+      }
+
+      /*
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      */
+
+      site-nav {
+        position: sticky;
+        top: 0;
+      }
+
+      footer {
+        position: sticky;
+        padding: 1rem;
+        color: white;
+        background-color: black;
+        bottom: 0;
+      }
+
+      .hero {
+
+        position: relative;
+
+        & > img {
+          display: block;
+          width: 100%;
+          height: auto;
+          z-index: -10;
+        }
+
+        & > .hero-content {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 40%;
+          z-index: 1;
+          color: white;
+          background: linear-gradient(0deg, #000000ff 0%, #00000000 100%);
+
+          gap: 0;
+
+          .title {
+            font-weight: bold;
+            font-size: clamp(5vw, 13rem, 6vw);
+            margin-bottom: -1rem;
+          }
+
+          .subtitle {
+            font-size: clamp(1rem, 2rem, 3vw);
+          }
+        }
+
+      }
+      
+    </style>
+    <script type="module" src="../src/js/components/site-nav.js"></script>
+  </head>
+  <body>
+    <div class="shell floating-head-foot">
+      <site-nav></site-nav>
+      <div>
+        <div class="hero">
+          <img
+            src="../src/assets/team-collab-768.jpg"
+            srcset="
+              ../src/assets/team-collab-480.jpg 480w,
+              ../src/assets/team-collab-768.jpg 768w,
+              ../src/assets/team-collab-1024.jpg 1024w,
+              ../src/assets/team-collab-1440.jpg 1440w
+            "
+            sizes="100vw"
+            alt="Sample team"
+          />
+          <div class="hero-content stack  --centered">
+            <div class="title">              
+              Collaborate Better
+            </div>
+            <div class="subtitle">
+              You have what it takes. You need to bring it out. Reap better results
+            </div>
+          </div>
+        </div>
+        <h1>Hello</h1>
+        <img
+          src="../src/assets/team-collab-768.jpg"
+          srcset="
+            ../src/assets/team-collab-480.jpg 480w,
+            ../src/assets/team-collab-768.jpg 768w,
+            ../src/assets/team-collab-1024.jpg 1024w,
+            ../src/assets/team-collab-1440.jpg 1440w
+          "
+          sizes="(width <= 48rem) 100vw, 48rem"
+          alt="Sample team"
+        />
+      </div>
+      <footer>Footer</footer>
+    </div>
+    <div class="container">
+      
+    </div>
+  </body>
+</html>

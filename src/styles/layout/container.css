@@ -8,3 +8,41 @@
 .page-content {
   padding: 1em;
 }
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+
+  &.--horizontal {
+    flex-direction: row;
+  }
+
+  &.--fit {
+    width: fit-content;
+  }
+
+  &.--inline {
+    display: inline-flex;
+  }
+
+  &.--centered {
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.docker {
+  position: relative;
+
+  & > * {
+    position: absolute;
+  }
+
+  &.--bottom {
+    bottom: 0;
+  }
+}
+
+
+

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../src/styles/main.css">
+    <style>
+      .stack-styling-for-this-page {
+        border: solid 1px #aaaaaa;
+        padding: 1em;
+        background-color: #eeeeee;
+      }
+      .stack-item {
+        background-color: lightgray;
+        padding: 1em;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Unified Layout (Layout 2)</h1>
+    <p>The goal of this page is to provide reusable layout CSS classes.</p>
+    <div class="page-content stack">
+      <h1>Stacks - Vertical and Horizontal</h1>
+      <p>Below is a vertical stack. We implement our approach of separating the layout styling from the content styling. Layout styling comes from the stack class. Physical features come from classes we
+        define for this page. This way, we can reuse the stack class on other pages without worrying about the physical features of the stack items.
+      </p>
+      
+      <div class="stack stack-styling-for-this-page">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>Below is a horizontal stack. We specify the base stack class, which by itself, is vertical. When we add the modifier CSS class --horizontal, the stack becomes horizontal.</p>
+      <div class="stack --horizontal stack-styling-for-this-page">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>Sometimes, we want to shrink wrap, or not let a parent container take up the entire width - just as wide as its children. Below is a vertical stack that we have shrink wrapped. We apply the
+        modifier class --fit for this effect.
+      </p>
+      <div class="stack --fit stack-styling-for-this-page">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>Now below is the horizontal version of the shrink wrap</p>
+      <div class="stack --horizontal --fit stack-styling-for-this-page">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <h1>Centering with Flex Containers</h1>
+      <p>We'll build upon stacks with vertical and horizontal alignment.</p>
+      <p>We created a modifer class --centered that would work with both vertical and horizontal stacks. Let's start with the horizontal scenario, which is the most familiar. As we expected, it will align items horizontally.
+        The --centered modifier class also did specify <code>align-items: center</code> but that wouldn't apply because we have only one row.
+      </p>
+      <div class="stack --horizontal --centered stack-styling-for-this-page">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>Now, let's investigate what happens when we have the vertical stack and we want to apply the --centered modifier. We see that it centered each item in the horizontal direction as expected. Now, intuitively,
+        we expect that it should center vertically, too but it doesn't. Recall that by default, a parent container's height is driven by the heights of its children. So, there would not be any vertical room for the 
+        parent to center its children.
+      </p>    
+      <div class="stack --centered stack-styling-for-this-page">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>
+        One unobvious and often confusing thing is the application of <code>justify-content</code> and <code>align-items</code>. We often automatically think that <code>justify-content</code> applies only to the
+        horizontal direction and <code>align-items</code> applies only to the vertical direction. The reality is, <code>justify-content</code> applies to the <code>flex-direction</code> specified.
+      </p>
+      <p>
+        When we have <code>flex-direction: row;</code>, <code>justify-content</code> applies to the horizontal direction, and <code>align-items</code> would apply to the vertical direction.
+      </p>
+      <p>
+        However, when <code>flex-direction: column;</code>, <code>justify-content</code> now applies tto the vertical direction and <code>align-items</code> would apply to the horizontal direction.
+      </p>
+      <p>So, in our vertical stack container, we see that it center-aligned each item horizontally. And it's the <code>align-items</code> that caused the horizontal centering.</p>
+      <p>To see the vertical centering, we'll need to explicitly assign a height to the container - one we know that is larger than what the children would push its parent. For demonstration, we'll apply
+        an inline style. Since the flex direction is column, <code>justify-content</code> achieved the vertical centering.
+      </p>
+      <div class="stack --centered stack-styling-for-this-page" style="height: 350px;">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>What about shrink wrapping when we have an explicit height and centering applied?</p>
+      <div class="stack --centered --fit stack-styling-for-this-page" style="height: 350px;">
+        <div class="stack-item">Stacked item 1</div>
+        <div class="stack-item">Stacked item 2</div>
+        <div class="stack-item">Stacked item 3</div>
+      </div>
+      <p>The <code>--fit</code> modifier class honored the explicit height and did not shrink wrap in the vertical direction. It did shrink wrap in the horizontal direction.</p>
+      <p>The CSS for what we've achieved with stacks, including shrink wrapping and centering are defined below:</p>
+      <pre>
+        .stack {
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-md);
+
+          &.--horizontal {
+            flex-direction: row;
+          }
+
+          &.--fit {
+            width: fit-content;
+          }
+
+          &.--centered {
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      </pre>
+    </div>
+    
+  </body>
+</html>
